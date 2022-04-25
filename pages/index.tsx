@@ -50,8 +50,24 @@ const Home: NextPage = () => {
   return (
     <div className="flex overflow-hidden h-screen flex-col items-center justify-center py-2 bg-teal-500">
       <Head>
+        <link rel="icon" href="/icon.jpeg" />
         <title>Beyond Tic Tac Toe</title>
-        <link rel="icon" href="/favicon.ico" />
+        <meta name="title" content="Beyond Tic Tac Toe" />
+        <meta name="description" content="An upgraded tic-tac-toe, more challenging and more fun!" />
+
+
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://beyond-tic-tac-toe.vercel.app" />
+        <meta property="og:title" content="Beyond Tic Tac Toe" />
+        <meta property="og:description" content="An upgraded tic-tac-toe, more challenging and more fun!" />
+        <meta property="og:image" content="https://beyond-tic-tac-toe.vercel.app/preview.jepg" />
+
+
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://beyond-tic-tac-toe.vercel.app" />
+        <meta property="twitter:title" content="Beyond Tic Tac Toe" />
+        <meta property="twitter:description" content="An upgraded tic-tac-toe, more challenging and more fun!" />
+        <meta property="twitter:image" content="https://beyond-tic-tac-toe.vercel.app/preview.jepg" />
       </Head>
 
       <main className="flex w-full flex-1 flex-col items-center justify-center text-center">
@@ -73,9 +89,11 @@ const Home: NextPage = () => {
         </div>
       </main>
 
-      {/* <footer className="flex h-24 w-full items-center justify-center border-t">
+      <footer className="flex flex-col h-24 w-full  text-white  items-center justify-center border-t">
+        <h1>Code is available on <a href='https://github.com/itzmeowww/beyond-tic-tac-toe' target='_blank' className='text-sm underline'>Github!</a></h1>
+        <h1>This project was inspired by this <a href='https://youtu.be/3q8Gh3yA9pw' target='_blank' className='text-sm underline'>video</a></h1>
 
-      </footer> */}
+      </footer>
     </div>
   )
 }

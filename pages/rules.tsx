@@ -8,8 +8,24 @@ const Rules = () => {
     return (
         <div className="flex min-h-screen w-full flex-col items-center justify-start py-20  bg-teal-500">
             <Head>
-                <title>Beyond Tic Tac Toe</title>
-                <link rel="icon" href="/favicon.ico" />
+                <link rel="icon" href="/icon.jpeg" />
+                <title>How to Play - Beyond Tic Tac Toe</title>
+                <meta name="title" content="How to Play - Beyond Tic Tac Toe" />
+                <meta name="description" content="An upgraded tic-tac-toe, more challenging and more fun!" />
+
+
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content="https://beyond-tic-tac-toe.vercel.app" />
+                <meta property="og:title" content="How to Play - Beyond Tic Tac Toe" />
+                <meta property="og:description" content="An upgraded tic-tac-toe, more challenging and more fun!" />
+                <meta property="og:image" content="https://beyond-tic-tac-toe.vercel.app/preview.jepg" />
+
+
+                <meta property="twitter:card" content="summary_large_image" />
+                <meta property="twitter:url" content="https://beyond-tic-tac-toe.vercel.app" />
+                <meta property="twitter:title" content="How to Play - Beyond Tic Tac Toe" />
+                <meta property="twitter:description" content="An upgraded tic-tac-toe, more challenging and more fun!" />
+                <meta property="twitter:image" content="https://beyond-tic-tac-toe.vercel.app/preview.jepg" />
             </Head>
             <h1 className="text-3xl font-semibold">
                 How To Play
