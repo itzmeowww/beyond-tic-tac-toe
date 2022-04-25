@@ -9,7 +9,7 @@ const Play = () => {
     const moveIn = useSpring({ to: { opacity: 1, y: 0 }, from: { opacity: 0, y: -100 } })
 
 
-
+    const [completedLines, setCompletedLines] = useState([false, false, false, false, false, false, false, false])
     const [table, setTable] = useState([["", "", ""], ["", "", ""], ["", "", ""]])
     const [player, setPlayer] = useState("x")
     const [winner, setWinner] = useState("")
@@ -47,7 +47,7 @@ const Play = () => {
 
         togglePlayer()
         validate()
-        checkPossible(newUsedX, newUsedO)
+        if (winner != '') checkPossible(newUsedX, newUsedO)
         setSizeIdx(-1)
     }
 
@@ -74,6 +74,11 @@ const Play = () => {
                     if (couO >= goal) {
                         setWinner('o')
                     }
+                    if (couO >= goal || couX >= goal) {
+                        let newLines = [...completedLines]
+                        newLines[j] = true
+                        setCompletedLines(newLines)
+                    }
                 }
                 if (j + goal - 1 < tableWidth) {
                     let couX = 0;
@@ -91,6 +96,11 @@ const Play = () => {
                     }
                     if (couO >= goal) {
                         setWinner('o')
+                    }
+                    if (couO >= goal || couX >= goal) {
+                        let newLines = [...completedLines]
+                        newLines[3 + i] = true
+                        setCompletedLines(newLines)
                     }
                 }
 
@@ -118,6 +128,11 @@ const Play = () => {
                     if (couO >= goal) {
                         setWinner('o')
                     }
+                    if (couO >= goal || couX >= goal) {
+                        let newLines = [...completedLines]
+                        newLines[6] = true
+                        setCompletedLines(newLines)
+                    }
                 }
 
                 if (i + goal - 1 < tableHeight && j - (goal - 1) >= 0) {
@@ -137,6 +152,11 @@ const Play = () => {
                     }
                     if (couO >= goal) {
                         setWinner('o')
+                    }
+                    if (couO >= goal || couX >= goal) {
+                        let newLines = [...completedLines]
+                        newLines[7] = true
+                        setCompletedLines(newLines)
                     }
                 }
 
@@ -191,6 +211,7 @@ const Play = () => {
         setTable([["", "", ""], ["", "", ""], ["", "", ""]])
         setUsedO([false, false, false, false, false])
         setUsedX([false, false, false, false, false])
+        setCompletedLines([false, false, false, false, false, false, false, false])
     }
     return (
         <div className="relative flex h-screen flex-col items-center justify-center bg-teal-500 overflow-hidden">
@@ -199,7 +220,7 @@ const Play = () => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <animated.div style={gameEnd} className="flex flex-col justify-end mb-12 items-center z-10 absolute w-full h-full ">
-                <div className="w-4/5 max-w-lg h-48 bg-white gap-6 flex flex-col justify-center items-center rounded shadow-lg" >
+                <div className="w-4/5 max-w-md h-48 bg-white gap-6 flex flex-col justify-center items-center rounded shadow-lg" >
                     {winner == 'Draw' &&
                         <h1 className="text-xl font-semibold">
                             Draw
@@ -238,7 +259,7 @@ const Play = () => {
 
 
                     </div>
-                    <table className="border-2 border-white table-auto border-collapse">
+                    <table className="relative border-2 border-white table-auto border-collapse">
                         <tbody>
                             {table.map((row, rowIdx) => {
                                 return <tr className="grid grid-cols-3">
@@ -252,7 +273,18 @@ const Play = () => {
                                 </tr>
                             })}
                         </tbody>
+
+                        {completedLines[0] && <div className="h-72 left-12 w-1 bg-yellow-300 absolute top-0"></div>}
+                        {completedLines[1] && <div className="h-72 left-36 w-1 bg-yellow-300 absolute top-0"></div>}
+                        {completedLines[2] && <div className="h-72 right-12 w-1 bg-yellow-300 absolute top-0"></div>}
+
+                        {completedLines[3] && <div className="h-1 left-0 w-72 bg-yellow-300 absolute top-12"></div>}
+                        {completedLines[4] && <div className="h-1 left-0 w-72 bg-yellow-300 absolute top-36"></div>}
+                        {completedLines[5] && <div className="h-1 left-0 w-72 bg-yellow-300 absolute bottom-12"></div>}
+                        {completedLines[6] && <div className="rotate-45 w-96 -left-12 h-1 bg-yellow-300 absolute top-36"></div>}
+                        {completedLines[7] && <div className="-rotate-45 w-96 -left-12 h-1 bg-yellow-300 absolute top-36"></div>}
                     </table>
+
                     <div className={`w-full border-white h-24 border-4 border-t-0 flex items-center justify-between px-4 ${player == 'o' ? 'bg-teal-600' : 'bg-transparent'}`}>
 
                         {sizes.map((size, _idx) =>
