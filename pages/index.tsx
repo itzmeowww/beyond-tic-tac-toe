@@ -1,27 +1,73 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import { animated, useTransition, useSpring } from 'react-spring'
+
+type BtnProps = {
+  y: number,
+  delay: number,
+  href: string,
+  label: string
+}
 const Home: NextPage = () => {
+  const router = useRouter()
+  const fadeIn = useSpring({ to: { opacity: 1, y: 0 }, from: { opacity: 0, y: -100 }, delay: 0 })
+  const [buttons, setButtons] = useState<BtnProps[]>([])
+  const transitions = useTransition(buttons, {
+    from: { x: -100, y: 800, opacity: 0 },
+    enter: button => (next) => (
+      next({ x: 0, y: button.y, delay: button.delay, opacity: 1 })
+    ),
+    leave: button => (next) => (
+      next({ x: 100, y: 800, delay: button.delay, opacity: 0 })
+    )
+  })
+
+  useEffect(() => {
+    setButtons([{
+      href: '/play',
+      label: 'Play Against Your Friend',
+      y: 0, delay: 150
+    }, {
+      href: '/ai',
+      label: 'Play Against AI',
+      y: 0, delay: 300
+    }, {
+      href: '/rules',
+      label: 'How to Play',
+      y: 0, delay: 450
+    }])
+  }, [])
+
+  const goTo = (url: string) => {
+    setButtons([])
+    setTimeout(() => {
+      router.push(url)
+    }, 600)
+
+  }
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2 bg-teal-500">
+    <div className="flex overflow-hidden h-screen flex-col items-center justify-center py-2 bg-teal-500">
       <Head>
         <title>Beyond Tic Tac Toe</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className="flex w-full flex-1 flex-col items-center justify-center text-center">
-        <h1 className='text-4xl font-semibold text-white mb-14'>
+        <animated.h1 style={fadeIn} className='text-4xl font-semibold text-white mb-20'>
           Beyond Tic Tac Toe
-        </h1>
+        </animated.h1>
         {/* TODO: re-design */}
         <div className='flex flex-col gap-6'>
 
+          {transitions((style, button) =>
+            button ? <animated.button onClick={() => goTo(button.href)} style={style} className='border-2 border-neutral-800 px-3 py-1 rounded bg-neutral-700 hover:bg-neutral-800 text-white shadow-md font-semibold transition-colors'>
+              {button.label}
+            </animated.button> : ''
+          )}
 
-          <a href='/play' className='border-2 border-neutral-800 px-3 py-1 rounded bg-neutral-700 hover:bg-neutral-800 text-white shadow-md font-semibold transition-colors'>
-            Play Against Your Friend
-          </a>
-          <a href='/ai' className='border-2 border-neutral-800 px-3 py-1 rounded bg-neutral-700 hover:bg-neutral-800 text-white shadow-md font-semibold transition-colors'>
-            Play Against AI
-          </a>
+
 
 
         </div>
@@ -35,3 +81,7 @@ const Home: NextPage = () => {
 }
 
 export default Home
+function useSprings(number: any, arg1: any) {
+  throw new Error('Function not implemented.')
+}
+

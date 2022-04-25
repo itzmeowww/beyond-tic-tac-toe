@@ -61,8 +61,9 @@ const Icon = ({ name, size, select }: Props) => {
     const styles = useSpring({ opacity: select ? 1 : 0 })
     if (name == 'x') {
         return <animated.div style={fadeIn} className={` flex flex-col items-center justify-center`}>
-            <XIcon size={size} />
             {select && <animated.div style={styles} className="bg-yellow-400 rounded-full h-2 w-2 mt-1" />}
+            <XIcon size={size} />
+
         </animated.div>
     }
     else {
