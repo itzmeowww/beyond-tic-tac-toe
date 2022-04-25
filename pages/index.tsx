@@ -60,14 +60,14 @@ const Home: NextPage = () => {
         <meta property="og:url" content="https://beyond-tic-tac-toe.vercel.app" />
         <meta property="og:title" content="Beyond Tic Tac Toe" />
         <meta property="og:description" content="An upgraded tic-tac-toe, more challenging and more fun!" />
-        <meta property="og:image" content="https://beyond-tic-tac-toe.vercel.app/preview.jepg" />
+        <meta property="og:image" content="https://beyond-tic-tac-toe.vercel.app/preview.jpeg" />
 
 
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content="https://beyond-tic-tac-toe.vercel.app" />
         <meta property="twitter:title" content="Beyond Tic Tac Toe" />
         <meta property="twitter:description" content="An upgraded tic-tac-toe, more challenging and more fun!" />
-        <meta property="twitter:image" content="https://beyond-tic-tac-toe.vercel.app/preview.jepg" />
+        <meta property="twitter:image" content="https://beyond-tic-tac-toe.vercel.app/preview.jpeg" />
       </Head>
 
       <main className="flex w-full flex-1 flex-col items-center justify-center text-center">

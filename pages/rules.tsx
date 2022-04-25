@@ -18,14 +18,14 @@ const Rules = () => {
                 <meta property="og:url" content="https://beyond-tic-tac-toe.vercel.app" />
                 <meta property="og:title" content="How to Play - Beyond Tic Tac Toe" />
                 <meta property="og:description" content="An upgraded tic-tac-toe, more challenging and more fun!" />
-                <meta property="og:image" content="https://beyond-tic-tac-toe.vercel.app/preview.jepg" />
+                <meta property="og:image" content="https://beyond-tic-tac-toe.vercel.app/preview.jpeg" />
 
 
                 <meta property="twitter:card" content="summary_large_image" />
                 <meta property="twitter:url" content="https://beyond-tic-tac-toe.vercel.app" />
                 <meta property="twitter:title" content="How to Play - Beyond Tic Tac Toe" />
                 <meta property="twitter:description" content="An upgraded tic-tac-toe, more challenging and more fun!" />
-                <meta property="twitter:image" content="https://beyond-tic-tac-toe.vercel.app/preview.jepg" />
+                <meta property="twitter:image" content="https://beyond-tic-tac-toe.vercel.app/preview.jpeg" />
             </Head>
             <h1 className="text-3xl font-semibold">
                 How To Play

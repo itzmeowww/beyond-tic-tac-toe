@@ -226,14 +226,14 @@ const Play = () => {
                 <meta property="og:url" content="https://beyond-tic-tac-toe.vercel.app" />
                 <meta property="og:title" content="Play - Beyond Tic Tac Toe" />
                 <meta property="og:description" content="An upgraded tic-tac-toe, more challenging and more fun!" />
-                <meta property="og:image" content="https://beyond-tic-tac-toe.vercel.app/preview.jepg" />
+                <meta property="og:image" content="https://beyond-tic-tac-toe.vercel.app/preview.jpeg" />
 
 
                 <meta property="twitter:card" content="summary_large_image" />
                 <meta property="twitter:url" content="https://beyond-tic-tac-toe.vercel.app" />
                 <meta property="twitter:title" content="Play - Beyond Tic Tac Toe" />
                 <meta property="twitter:description" content="An upgraded tic-tac-toe, more challenging and more fun!" />
-                <meta property="twitter:image" content="https://beyond-tic-tac-toe.vercel.app/preview.jepg" />
+                <meta property="twitter:image" content="https://beyond-tic-tac-toe.vercel.app/preview.jpeg" />
             </Head>
             <animated.div style={gameEnd} className="flex flex-col justify-end mb-12 items-center z-10 absolute w-full h-full ">
                 <div className="w-4/5 max-w-md h-48 bg-white gap-6 flex flex-col justify-center items-center rounded shadow-lg" >
