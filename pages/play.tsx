@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSpring, animated } from 'react-spring'
 import Icon from "../components/Icon";
 
@@ -47,7 +47,6 @@ const Play = () => {
 
         togglePlayer()
         validate()
-        if (winner != '') checkPossible(newUsedX, newUsedO)
         setSizeIdx(-1)
     }
 
@@ -163,20 +162,22 @@ const Play = () => {
             }
         }
 
+
     }
 
 
-    const checkPossible = (newUsedX: boolean[], newUsedO: boolean[]) => {
+    const checkPossible = () => {
+
         let maxSize = -1;
         let have = false
         sizes.forEach((size, _idx) => {
-            if (!newUsedO[_idx] || !newUsedX[_idx]) {
+            if (!usedO[_idx] || !usedX[_idx]) {
                 have = true
             }
-            if (player == 'o' && !newUsedO[_idx]) {
+            if (player == 'o' && !usedO[_idx]) {
                 maxSize = Math.max(maxSize, size)
             }
-            if (player == 'x' && !newUsedX[_idx]) {
+            if (player == 'x' && !usedX[_idx]) {
                 maxSize = Math.max(maxSize, size)
             }
         })
@@ -205,6 +206,10 @@ const Play = () => {
             setPlayer('x')
         }
     }
+
+    useEffect(() => {
+        if (winner == '') checkPossible()
+    }, [usedO, usedX])
 
     const reset = () => {
         setWinner('')
@@ -266,13 +271,13 @@ const Play = () => {
                     Go Back
                 </a> */}
                 <div className="shadow-md" >
-                    <div className={`w-full h-24 border-white border-4 border-b-0 flex justify-between items-center px-4 ${player == 'x' ? 'bg-teal-600' : 'bg-transparent'}`}>
+                    <div className={`w-full border-white h-24 border-4 border-b-0 flex items-center justify-between px-4 ${player == 'o' ? 'bg-teal-600' : 'bg-transparent'}`}>
+
                         {sizes.map((size, _idx) =>
-                            <div className={`hover:cursor-pointer flex flex-col items-center justify-end ${usedX[_idx] && 'invisible'}`} onClick={() => { if (player == 'x') setSizeIdx(_idx) }}>
-                                <Icon name="x" select={sizeIdx == _idx && player == 'x'} size={size} />
+                            <div onClick={() => { if (player == 'o') setSizeIdx(_idx) }} className={`hover:cursor-pointer flex flex-col items-center justify-end ${usedO[_idx] && 'invisible'}`} >
+                                <Icon name="o" select={sizeIdx == _idx && player == 'o'} size={size} />
                             </div>
                         )}
-
 
                     </div>
                     <table className="relative border-2 border-white table-auto border-collapse">
@@ -300,16 +305,16 @@ const Play = () => {
                         {completedLines[6] && <div className="rotate-45 w-96 -left-12 h-1 bg-yellow-300 absolute top-36"></div>}
                         {completedLines[7] && <div className="-rotate-45 w-96 -left-12 h-1 bg-yellow-300 absolute top-36"></div>}
                     </table>
-
-                    <div className={`w-full border-white h-24 border-4 border-t-0 flex items-center justify-between px-4 ${player == 'o' ? 'bg-teal-600' : 'bg-transparent'}`}>
-
+                    <div className={`w-full h-24 border-white border-4 border-t-0 flex justify-between items-center px-4 ${player == 'x' ? 'bg-teal-600' : 'bg-transparent'}`}>
                         {sizes.map((size, _idx) =>
-                            <div onClick={() => { if (player == 'o') setSizeIdx(_idx) }} className={`hover:cursor-pointer flex flex-col items-center justify-end ${usedO[_idx] && 'invisible'}`} >
-                                <Icon name="o" select={sizeIdx == _idx && player == 'o'} size={size} />
+                            <div className={`hover:cursor-pointer flex flex-col items-center justify-end ${usedX[_idx] && 'invisible'}`} onClick={() => { if (player == 'x') setSizeIdx(_idx) }}>
+                                <Icon name="x" select={sizeIdx == _idx && player == 'x'} size={size} />
                             </div>
                         )}
 
+
                     </div>
+
                 </div>
             </animated.div >
         </div >

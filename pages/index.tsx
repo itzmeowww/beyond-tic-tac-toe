@@ -68,6 +68,7 @@ const Home: NextPage = () => {
         <meta property="twitter:title" content="Beyond Tic Tac Toe" />
         <meta property="twitter:description" content="An upgraded tic-tac-toe, more challenging and more fun!" />
         <meta property="twitter:image" content="https://beyond-tic-tac-toe.vercel.app/preview.jpeg" />
+
       </Head>
 
       <main className="flex w-full flex-1 flex-col items-center justify-center text-center">
