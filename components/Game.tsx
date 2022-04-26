@@ -12,6 +12,9 @@ type Props = {
 
 const minimax = (depth: number, myMark: string, isMax: boolean, gameSettings: { tableHeight: number, tableWidth: number, goal: number, sizes: number[] }, table: string[][], usedO: boolean[], usedX: boolean[], nextPlayer: string) => {
 
+    console.log('enter minimax')
+    console.log('usedO', usedO)
+    console.log('usedX', usedX)
     const tableHeight = gameSettings.tableHeight;
     const tableWidth = gameSettings.tableWidth;
     const sizes = gameSettings.sizes
@@ -25,6 +28,7 @@ const minimax = (depth: number, myMark: string, isMax: boolean, gameSettings: { 
     }
 
     const res = evaluateBoard(gameSettings, table, usedO, usedX, nextPlayer)
+    console.log('table', table)
     console.log('minimax', res)
     if (res.status == '') {
 
@@ -36,7 +40,7 @@ const minimax = (depth: number, myMark: string, isMax: boolean, gameSettings: { 
         return 0;
     }
     else if (res.status != myMark) {
-        return -1;
+        return -2;
     }
 
     for (let idx = 0; idx < sizes.length; idx++) {
@@ -86,13 +90,13 @@ const minimax = (depth: number, myMark: string, isMax: boolean, gameSettings: { 
 
 
     }
-
+    console.log('bval', bestVal)
     return bestVal;
 }
 
 const bestMove = (myMark: string, gameSettings: { tableHeight: number, tableWidth: number, goal: number, sizes: number[] }, table: string[][], usedO: boolean[], usedX: boolean[], player: string) => {
     let bestVal = -Infinity;
-    let move = { 'r': -1, 'c': -1, 'idx': -1 }
+    let moves: { r: number, c: number, idx: number }[] = []
     const sizes = gameSettings.sizes
     for (let idx = 0; idx < sizes.length; idx++) {
         if (usedO[idx]) {
@@ -101,24 +105,39 @@ const bestMove = (myMark: string, gameSettings: { tableHeight: number, tableWidt
         usedO[idx] = true
         for (let i = 0; i < gameSettings.tableHeight; i++) {
             for (let j = 0; j < gameSettings.tableWidth; j++) {
-                if (table[i][j] == '' || (table[i][j].split('_')[0] != player && sizes[+table[i][j].split('_')[1]] < sizes[idx])) {
+                if (table[i][j] == '' || (table[i][j].split('_')[0] != 'o' && sizes[+table[i][j].split('_')[1]] < sizes[idx])) {
                     table[i][j] = `${player}_${idx}`
-                    let score = minimax(0, myMark, false, gameSettings, table, usedO, usedX, player == 'x' ? 'o' : 'x')
+                    let score = minimax(0, myMark, false, gameSettings, table, usedO, usedX, 'x')
+                    console.log(i, j, score)
                     table[i][j] = ''
+
                     if (score > bestVal) {
-                        move = {
-                            'r': i,
-                            'c': j,
-                            'idx': idx,
-                        }
+                        moves = [
+                            {
+                                'r': i,
+                                'c': j,
+                                'idx': idx,
+                            }
+                        ]
                         bestVal = score
                     }
+                    else if (score == bestVal) {
+                        moves.push(
+                            {
+                                'r': i,
+                                'c': j,
+                                'idx': idx,
+                            }
+                        )
+                    }
+                    console.log('best-val', bestVal)
                 }
             }
         }
         usedO[idx] = false
     }
-    return move
+    console.log('moves', moves)
+    return moves[Math.floor(Math.random() * moves.length)]
 }
 
 const evaluateBoard = (gameSettings: { tableHeight: number, tableWidth: number, goal: number, sizes: number[] }, table: string[][], usedO: boolean[], usedX: boolean[], nextPlayer: string) => {
@@ -324,7 +343,7 @@ const Game = ({ xPlayer = 'human', oPlayer = 'human' }: Props) => {
             isMounted.current = true
             return
         }
-        const ret = evaluateBoard(gameSettings, [...boardStatus.table], [...boardStatus.usedO], [...boardStatus.usedX], player == 'x' ? 'o' : 'x')
+        const ret = evaluateBoard(gameSettings, boardStatus.table, boardStatus.usedO, boardStatus.usedX, player == 'x' ? 'o' : 'x')
         if (ret.status == 'x') {
             setWinner('x')
             setCompletedLines((prev) => {
@@ -385,7 +404,6 @@ const Game = ({ xPlayer = 'human', oPlayer = 'human' }: Props) => {
             let table = Array.from(Array(gameSettings.tableHeight), () => new Array(gameSettings.tableWidth))
 
             for (let i = 0; i < gameSettings.tableHeight; i++) {
-
                 for (let j = 0; j < gameSettings.tableWidth; j++) {
                     table[i][j] = boardStatus.table[i][j]
                 }
@@ -428,26 +446,7 @@ const Game = ({ xPlayer = 'human', oPlayer = 'human' }: Props) => {
     }
     return (
         <div className="relative flex h-screen flex-col items-center justify-center bg-teal-500 overflow-hidden">
-            <Head>
-                <link rel="icon" href="/icon.jpeg" />
-                <title>Play - Beyond Tic Tac Toe</title>
-                <meta name="title" content="Play - Beyond Tic Tac Toe" />
-                <meta name="description" content="An upgraded tic-tac-toe, more challenging and more fun!" />
 
-
-                <meta property="og:type" content="website" />
-                <meta property="og:url" content="https://beyond-tic-tac-toe.vercel.app" />
-                <meta property="og:title" content="Play - Beyond Tic Tac Toe" />
-                <meta property="og:description" content="An upgraded tic-tac-toe, more challenging and more fun!" />
-                <meta property="og:image" content="https://beyond-tic-tac-toe.vercel.app/preview.jpeg" />
-
-
-                <meta property="twitter:card" content="summary_large_image" />
-                <meta property="twitter:url" content="https://beyond-tic-tac-toe.vercel.app" />
-                <meta property="twitter:title" content="Play - Beyond Tic Tac Toe" />
-                <meta property="twitter:description" content="An upgraded tic-tac-toe, more challenging and more fun!" />
-                <meta property="twitter:image" content="https://beyond-tic-tac-toe.vercel.app/preview.jpeg" />
-            </Head>
             <PopUpCard reset={reset} winner={winner} />
             <animated.div style={fadeIn} className="">
                 {/* <a href="/" onClick={reset} className='border-2 border-neutral-800 px-3 py-1 rounded bg-neutral-700 hover:bg-neutral-800 text-white shadow-md font-semibold transition-colors text-xs'>
@@ -457,7 +456,7 @@ const Game = ({ xPlayer = 'human', oPlayer = 'human' }: Props) => {
                     <div className={`w-full border-white h-24 border-4 border-b-0 flex items-center justify-between px-4 ${player == 'o' ? 'bg-teal-600' : 'bg-transparent'}`}>
 
                         {sizes.map((size, _idx) =>
-                            <div onClick={() => { if (player == 'o') setSizeIdx(_idx) }} className={`hover:cursor-pointer flex flex-col items-center justify-end ${boardStatus.usedO[_idx] && 'invisible'}`} >
+                            <div key={`o-${_idx}`} onClick={() => { if (player == 'o') setSizeIdx(_idx) }} className={`hover:cursor-pointer flex flex-col items-center justify-end ${boardStatus.usedO[_idx] && 'invisible'}`} >
                                 <Icon name="o" select={sizeIdx == _idx && player == 'o'} size={size} />
                             </div>
                         )}
@@ -466,7 +465,7 @@ const Game = ({ xPlayer = 'human', oPlayer = 'human' }: Props) => {
                     <table className="relative border-2 border-white table-auto border-collapse">
                         <tbody>
                             {boardStatus.table.map((row, rowIdx) => {
-                                return <tr className="grid grid-cols-3">
+                                return <tr key={`r-${rowIdx}`} className="grid grid-cols-3">
                                     {row.map((col, colIdx) => {
                                         return <td key={`t-${rowIdx}-${colIdx}`} onClick={() => {
                                             placeTable(rowIdx, colIdx, sizeIdx);
@@ -490,7 +489,7 @@ const Game = ({ xPlayer = 'human', oPlayer = 'human' }: Props) => {
                     </table>
                     <div className={`w-full h-24 border-white border-4 border-t-0 flex justify-between items-center px-4 ${player == 'x' ? 'bg-teal-600' : 'bg-transparent'}`}>
                         {sizes.map((size, _idx) =>
-                            <div className={`hover:cursor-pointer flex flex-col items-center justify-end ${boardStatus.usedX[_idx] && 'invisible'}`} onClick={() => { if (player == 'x') setSizeIdx(_idx) }}>
+                            <div key={`x-${_idx}`} className={`hover:cursor-pointer flex flex-col items-center justify-end ${boardStatus.usedX[_idx] && 'invisible'}`} onClick={() => { if (player == 'x') setSizeIdx(_idx) }}>
                                 <Icon name="x" select={sizeIdx == _idx && player == 'x'} size={size} />
                             </div>
                         )}
