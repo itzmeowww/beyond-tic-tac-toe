@@ -63,16 +63,17 @@ const Icon = ({ name, size, select = false, isWhite = true }: Props) => {
     const styles = useSpring({ opacity: select ? 1 : 0 })
     if (name == 'x') {
         return <animated.div style={fadeIn} className={` flex flex-col items-center justify-center`}>
-            {select && <animated.div style={styles} className="bg-yellow-400 rounded-full h-2 w-2 mt-1" />}
-            <XIcon size={size} isWhite={isWhite} />
 
+            <XIcon size={size} isWhite={isWhite} />
+            {select && <animated.div style={styles} className="bg-yellow-400 rounded-full h-2 w-2 mt-1" />}
         </animated.div>
     }
     else {
 
         return <animated.div style={fadeIn} className={`flex flex-col items-center justify-center`}>
+            {select && <animated.div style={styles} className="bg-yellow-400 rounded-full h-2 w-2 mb-2" />}
             <OIcon size={size} isWhite={isWhite} />
-            {select && <animated.div style={styles} className="bg-yellow-400 rounded-full h-2 w-2 mt-2" />}
+
         </animated.div>
     }
 }
