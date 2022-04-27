@@ -9,8 +9,8 @@ type Props = {
 const PopUpCard = ({ winner, reset }: Props) => {
     const gameEnd = useSpring({ opacity: winner == '' ? 0 : 1, y: winner == '' ? '100%' : '0' })
     return (
-        <animated.div style={gameEnd} className="flex flex-col justify-end mb-12 items-center z-10 absolute w-full h-full ">
-            <div className="w-4/5 max-w-md h-36 md:h-48 bg-white gap-6 flex flex-col justify-center items-center rounded shadow-lg" >
+        <animated.div style={gameEnd} className=" flex flex-col justify-end mb-56 items-center z-10 absolute w-screen h-screen ">
+            <div className="w-4/5 max-w-sm h-36 md:h-40 bg-white gap-6 flex flex-col justify-center items-center rounded shadow-xl" >
                 {winner == 'draw' &&
                     <h1 className="text-xl font-semibold">
                         Draw
