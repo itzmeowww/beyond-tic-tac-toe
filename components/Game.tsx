@@ -1,5 +1,3 @@
-import Head from "next/head";
-
 import { useEffect, useRef, useState } from "react";
 import { useSpring, animated } from 'react-spring'
 import Icon from "../components/Icon";
@@ -12,9 +10,8 @@ type Props = {
 
 const minimax = (depth: number, myMark: string, isMax: boolean, gameSettings: { tableHeight: number, tableWidth: number, goal: number, sizes: number[] }, table: string[][], usedO: boolean[], usedX: boolean[], nextPlayer: string) => {
 
-    console.log('enter minimax')
-    console.log('usedO', usedO)
-    console.log('usedX', usedX)
+
+
     const tableHeight = gameSettings.tableHeight;
     const tableWidth = gameSettings.tableWidth;
     const sizes = gameSettings.sizes
@@ -28,8 +25,7 @@ const minimax = (depth: number, myMark: string, isMax: boolean, gameSettings: { 
     }
 
     const res = evaluateBoard(gameSettings, table, usedO, usedX, nextPlayer)
-    console.log('table', table)
-    console.log('minimax', res)
+
     if (res.status == '') {
 
     }
@@ -40,7 +36,7 @@ const minimax = (depth: number, myMark: string, isMax: boolean, gameSettings: { 
         return 0;
     }
     else if (res.status != myMark) {
-        return -2;
+        return -1;
     }
 
     for (let idx = 0; idx < sizes.length; idx++) {
@@ -50,6 +46,7 @@ const minimax = (depth: number, myMark: string, isMax: boolean, gameSettings: { 
         if (nextPlayer == 'o' && usedO[idx]) {
             continue
         }
+        console.log('idx ', idx)
 
         if (nextPlayer == 'x') {
             usedX[idx] = true
@@ -60,9 +57,10 @@ const minimax = (depth: number, myMark: string, isMax: boolean, gameSettings: { 
         if (isMax) {
             for (let i = 0; i < tableHeight; i++) {
                 for (let j = 0; j < tableWidth; j++) {
+                    // console.log('max ', i, j, table[i][j])
                     if (table[i][j] == '' || (table[i][j].split('_')[0] != nextPlayer && sizes[+table[i][j].split('_')[1]] < sizes[idx])) {
                         table[i][j] = `${nextPlayer}_${idx}`
-                        let score = minimax(depth + 1, myMark, !isMax, gameSettings, table, usedO, usedX, nextPlayer == 'x' ? 'o' : 'x')
+                        let score = minimax(depth + 1, myMark, !isMax, gameSettings, table, [...usedO], [...usedX], nextPlayer == 'x' ? 'o' : 'x')
                         bestVal = Math.max(score, bestVal)
                     }
                 }
@@ -72,9 +70,10 @@ const minimax = (depth: number, myMark: string, isMax: boolean, gameSettings: { 
 
             for (let i = 0; i < tableHeight; i++) {
                 for (let j = 0; j < tableWidth; j++) {
+                    // console.log('min ', i, j, table[i][j])
                     if (table[i][j] == '' || (table[i][j].split('_')[0] != nextPlayer && sizes[+table[i][j].split('_')[1]] < sizes[idx])) {
                         table[i][j] = `${nextPlayer}_${idx}`
-                        let score = minimax(depth + 1, myMark, !isMax, gameSettings, table, usedO, usedX, nextPlayer == 'x' ? 'o' : 'x')
+                        let score = minimax(depth + 1, myMark, !isMax, gameSettings, table, [...usedO], [...usedX], nextPlayer == 'x' ? 'o' : 'x')
                         bestVal = Math.min(score, bestVal)
                     }
                 }
@@ -90,7 +89,7 @@ const minimax = (depth: number, myMark: string, isMax: boolean, gameSettings: { 
 
 
     }
-    console.log('bval', bestVal)
+
     return bestVal;
 }
 
@@ -105,11 +104,24 @@ const bestMove = (myMark: string, gameSettings: { tableHeight: number, tableWidt
         usedO[idx] = true
         for (let i = 0; i < gameSettings.tableHeight; i++) {
             for (let j = 0; j < gameSettings.tableWidth; j++) {
+                // console.log(': ', i, j, ' ??', table[i][j])
+
                 if (table[i][j] == '' || (table[i][j].split('_')[0] != 'o' && sizes[+table[i][j].split('_')[1]] < sizes[idx])) {
-                    table[i][j] = `${player}_${idx}`
-                    let score = minimax(0, myMark, false, gameSettings, table, usedO, usedX, 'x')
-                    console.log(i, j, score)
-                    table[i][j] = ''
+
+
+
+                    let newTable = Array.from(Array(gameSettings.tableHeight), () => new Array(gameSettings.tableWidth))
+
+                    for (let i = 0; i < gameSettings.tableHeight; i++) {
+                        for (let j = 0; j < gameSettings.tableWidth; j++) {
+                            newTable[i][j] = table[i][j]
+                        }
+                    }
+                    newTable[i][j] = `${player}_${idx}`
+
+                    let score = minimax(0, myMark, false, gameSettings, newTable, [...usedO], [...usedX], 'x')
+
+
 
                     if (score > bestVal) {
                         moves = [
@@ -130,7 +142,6 @@ const bestMove = (myMark: string, gameSettings: { tableHeight: number, tableWidt
                             }
                         )
                     }
-                    console.log('best-val', bestVal)
                 }
             }
         }
