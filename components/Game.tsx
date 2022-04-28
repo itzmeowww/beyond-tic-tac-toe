@@ -385,32 +385,30 @@ const Game = ({ xPlayer = 'human', oPlayer = 'human' }: Props) => {
 
     useEffect(() => {
         if (player == 'o' && oPlayer == 'random' && winner == '') {
-            let availableIdx: number[] = []
+
+            let availableChoice: { i: number; j: number, idx: number }[] = []
             boardStatus.usedO.forEach((value, _idx) => {
                 if (value == false) {
-                    availableIdx.push(_idx)
+                    boardStatus.table.forEach((row, _r) => {
+                        row.forEach((col, _c) => {
+                            if (player != col.split('_')[0] && sizes[+col.split('_')[1]] < sizes[_idx]) {
+                                availableChoice.push({ i: _r, j: _c, idx: _idx })
+                            }
+                            else if (col == '') {
+                                availableChoice.push({ i: _r, j: _c, idx: _idx })
+                            }
+                        })
+                    })
                 }
             })
 
-            let botSelectedIdx = availableIdx[Math.floor(Math.random() * availableIdx.length)]
 
-            let availablePos: { i: number; j: number }[] = []
-            boardStatus.table.forEach((row, _r) => {
-                row.forEach((col, _c) => {
-                    if (sizes[+col.split('_')[1]] < sizes[botSelectedIdx]) {
-                        availablePos.push({ i: _r, j: _c })
-                    }
-                    else if (col == '') {
-                        availablePos.push({ i: _r, j: _c })
-                    }
-                })
-            })
-            setSizeIdx(botSelectedIdx)
-            // console.log(botSelectedIdx)
-            let botSelectedPos = availablePos[Math.floor(Math.random() * availablePos.length)]
-            // console.log(botSelectedIdx, botSelectedPos)
+            const choice = availableChoice[Math.floor(Math.random() * availableChoice.length)]
+
+            setSizeIdx(choice.idx)
+
             setTimeout(() => {
-                placeTable(botSelectedPos.i, botSelectedPos.j, botSelectedIdx)
+                placeTable(choice.i, choice.j, choice.idx)
             }, 500)
 
         }
