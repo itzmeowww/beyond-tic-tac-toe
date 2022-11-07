@@ -90,8 +90,8 @@ const Home: NextPage = () => {
         </div>
       </main>
 
-      <footer className="flex flex-col h-24 w-full  text-white  items-center justify-center border-t">
-        <h1>Code is available on <a href='https://github.com/itzmeowww/beyond-tic-tac-toe' target='_blank' className='text-sm underline'>Github!</a></h1>
+      <footer className="flex flex-col h-24 w-full  text-white  items-center justify-center border-t bg-teal-500 ">
+        <h1>Code is available on <a href='https://github.com/itzmeowww/beyond-tic-tac-toe' target='_blank' className='text-sm underline'>GitHub</a></h1>
         <h1>This project was inspired by this <a href='https://youtu.be/3q8Gh3yA9pw' target='_blank' className='text-sm underline'>video</a></h1>
 
       </footer>

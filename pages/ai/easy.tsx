@@ -26,6 +26,9 @@ const Play = () => {
                 <meta property="twitter:description" content="An upgraded tic-tac-toe, more challenging and more fun!" />
                 <meta property="twitter:image" content="https://beyond-tic-tac-toe.vercel.app/preview.jpeg" />
             </Head>
+            <a href="/" className='border-2 my-4 border-neutral-800 px-3 py-1 rounded bg-neutral-700 hover:bg-neutral-800 text-white shadow-md font-semibold transition-colors text-xs'>
+                Go Back
+            </a>
             <Game oPlayer="random" />
         </div >
     );

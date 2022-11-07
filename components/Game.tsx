@@ -8,7 +8,7 @@ import type { boardStatusType } from "../types/boardStatusType";
 type Props = {
     xPlayer?: string
     oPlayer?: string
-    qTable?: any
+    flipScore?: boolean
 }
 
 
@@ -16,7 +16,7 @@ export const gameSettings = { tableWidth: 3, tableHeight: 3, goal: 3, sizes: [1,
 
 
 
-const Game = ({ xPlayer = 'human', oPlayer = 'human' }: Props) => {
+const Game = ({ xPlayer = 'human', oPlayer = 'human', flipScore = false }: Props) => {
     const isMounted = useRef(false);
 
     const initialBoardStatus: boardStatusType = {
@@ -35,6 +35,8 @@ const Game = ({ xPlayer = 'human', oPlayer = 'human' }: Props) => {
     const [player, setPlayer] = useState("x")
     const [winner, setWinner] = useState("")
 
+    const [xScore, setXscore] = useState(0)
+    const [oScore, setOscore] = useState(0)
     const [sizeIdx, setSizeIdx] = useState(-1)
 
 
@@ -81,6 +83,7 @@ const Game = ({ xPlayer = 'human', oPlayer = 'human' }: Props) => {
 
         if (ret.status == 'x') {
             setWinner('x')
+            setXscore(xScore + 1)
             setCompletedLines((prev) => {
                 prev[ret.completedLine] = true
                 return prev
@@ -88,6 +91,7 @@ const Game = ({ xPlayer = 'human', oPlayer = 'human' }: Props) => {
         }
         else if (ret.status == 'o') {
             setWinner('o')
+            setOscore(oScore + 1)
             setCompletedLines((prev) => {
                 prev[ret.completedLine] = true
                 return prev
@@ -154,16 +158,24 @@ const Game = ({ xPlayer = 'human', oPlayer = 'human' }: Props) => {
         setCompletedLines([false, false, false, false, false, false, false, false])
     }
     return (
-        <div className="w-full relative flex h-screen flex-col items-center justify-center bg-teal-500 overflow-hidden">
 
+
+        <div className="w-full relative flex h-screen flex-col items-center justify-center bg-teal-500 overflow-hidden">
             <PopUpCard reset={reset} winner={winner} />
             <animated.div style={fadeIn} className="">
-                {/* <a href="/" onClick={reset} className='border-2 border-neutral-800 px-3 py-1 rounded bg-neutral-700 hover:bg-neutral-800 text-white shadow-md font-semibold transition-colors text-xs'>
-                    Go Back
-                </a> */}
+
                 {/* <div className="text-white font-mono text-sm text-left px-2 h-6 w-full bg-black border-white border-4 border-b-0">
                     AI
                 </div> */}
+                <div className="w-full relative">
+                    <div className="left-0 absolute border-4 w-12 text-center -bottom-1 border-white text-white font-bold">
+                        <div className={`${flipScore ? 'rotate-180' : ''}`}>
+
+
+                            {oScore}
+                        </div>
+                    </div>
+                </div>
                 <div className="shadow-xl" >
                     <div className={`w-full border-white h-24 border-4 border-b-0 flex items-center justify-between px-4 ${player == 'o' ? 'bg-teal-600' : 'bg-transparent'}`}>
 
@@ -211,8 +223,14 @@ const Game = ({ xPlayer = 'human', oPlayer = 'human' }: Props) => {
                     </div>
 
                 </div>
+                <div className="w-full relative">
+                    <div className="right-0 absolute border-4 w-12 text-center -top-1 border-white text-white font-bold">
+                        {xScore}
+                    </div>
+                </div>
             </animated.div >
         </div >
+
     );
 }
 
