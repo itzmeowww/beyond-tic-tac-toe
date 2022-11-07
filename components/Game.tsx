@@ -29,7 +29,7 @@ const Game = ({ xPlayer = 'human', oPlayer = 'human' }: Props) => {
 
 
 
-    const [completedLines, setCompletedLines] = useState([false, false, false, false, false, false, false, false])
+    const [completedLines, setCompletedLines] = useState([!false, !false, !false, !false, !false, !false, !false, !false])
 
     const [boardStatus, setBoardStatus] = useState<boardStatusType>(initialBoardStatus)
     const [player, setPlayer] = useState("x")
@@ -190,15 +190,15 @@ const Game = ({ xPlayer = 'human', oPlayer = 'human' }: Props) => {
                                 })}
                             </tbody>
                         </table>
-                        {completedLines[0] && <div className="h-72 left-12 w-1 bg-yellow-300 absolute top-0"></div>}
-                        {completedLines[1] && <div className="h-72 left-36 w-1 bg-yellow-300 absolute top-0"></div>}
-                        {completedLines[2] && <div className="h-72 right-12 w-1 bg-yellow-300 absolute top-0"></div>}
+                        {completedLines[0] && <div className="h-[284px] left-12 w-1 bg-yellow-300 absolute top-1"></div>}
+                        {completedLines[1] && <div className="h-[284px] left-36 w-1 bg-yellow-300 absolute top-1"></div>}
+                        {completedLines[2] && <div className="h-[284px] right-12 w-1 bg-yellow-300 absolute top-1"></div>}
 
-                        {completedLines[3] && <div className="h-1 left-0 w-72 bg-yellow-300 absolute top-12"></div>}
-                        {completedLines[4] && <div className="h-1 left-0 w-72 bg-yellow-300 absolute top-36"></div>}
-                        {completedLines[5] && <div className="h-1 left-0 w-72 bg-yellow-300 absolute bottom-12"></div>}
-                        {completedLines[6] && <div className="rotate-45 w-96 -left-12 h-1 bg-yellow-300 absolute top-36"></div>}
-                        {completedLines[7] && <div className="-rotate-45 w-96 -left-12 h-1 bg-yellow-300 absolute top-36"></div>}
+                        {completedLines[3] && <div className="h-1 left-1 w-[284px] bg-yellow-300 absolute top-12"></div>}
+                        {completedLines[4] && <div className="h-1 left-1 w-[284px] bg-yellow-300 absolute top-36"></div>}
+                        {completedLines[5] && <div className="h-1 left-1 w-[284px] bg-yellow-300 absolute bottom-12"></div>}
+                        {completedLines[6] && <div className="rotate-45 w-[395px] -left-[51px] h-1 bg-yellow-300 absolute top-36"></div>}
+                        {completedLines[7] && <div className="-rotate-45 w-[395px] -left-[51px] h-1 bg-yellow-300 absolute top-36"></div>}
                     </div>
                     <div className={`w-full h-24 border-white border-4 border-t-0 flex justify-between items-center px-4 ${player == 'x' ? 'bg-teal-600' : 'bg-transparent'}`}>
                         {sizes.map((size, _idx) =>
