@@ -28,8 +28,8 @@ const Game = ({ xPlayer = 'human', oPlayer = 'human' }: Props) => {
     const fadeIn = useSpring({ to: { opacity: 1 }, from: { opacity: 0 }, delay: 0 })
 
 
-
-    const [completedLines, setCompletedLines] = useState([!false, !false, !false, !false, !false, !false, !false, !false])
+    // const [completedLines, setCompletedLines] = useState([!false, !false, !false, !false, !false, !false, !false, !false])
+    const [completedLines, setCompletedLines] = useState([false, false, false, false, false, false, false, false])
 
     const [boardStatus, setBoardStatus] = useState<boardStatusType>(initialBoardStatus)
     const [player, setPlayer] = useState("x")
