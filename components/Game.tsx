@@ -1,326 +1,43 @@
 import { useEffect, useRef, useState } from "react";
 import { useSpring, animated } from 'react-spring'
-import Icon from "../components/Icon";
+import Icon from "./Icon";
 import PopUpCard from "./PopUpCard";
+import { evaluateBoard } from '../utils/evaluate'
+import type { boardStatusType } from "../types/boardStatusType";
 
 type Props = {
     xPlayer?: string
     oPlayer?: string
+    qTable?: any
 }
 
-const minimax = (depth: number, myMark: string, isMax: boolean, gameSettings: { tableHeight: number, tableWidth: number, goal: number, sizes: number[] }, table: string[][], usedO: boolean[], usedX: boolean[], nextPlayer: string) => {
-    // console.log('depth', depth)
-    // console.table(table)
 
-    const tableHeight = gameSettings.tableHeight;
-    const tableWidth = gameSettings.tableWidth;
-    const sizes = gameSettings.sizes
-    let bestVal = 0;
-    if (isMax) {
-        bestVal = -Infinity
-    }
-    else {
-        bestVal = Infinity
-
-    }
-
-    const res = evaluateBoard(gameSettings, table, usedO, usedX, nextPlayer)
-
-    if (res.status == '') {
-
-    }
-    else if (res.status == myMark) {
-        return 1;
-    }
-    else if (res.status == 'draw') {
-        return 0;
-    }
-    else if (res.status != myMark) {
-        return -1;
-    }
-
-    for (let idx = 0; idx < sizes.length; idx++) {
-        if (nextPlayer == 'x' && usedX[idx]) {
-            continue
-        }
-        if (nextPlayer == 'o' && usedO[idx]) {
-            continue
-        }
-        // console.log('idx ', idx)
-
-        if (nextPlayer == 'x') {
-            usedX[idx] = true
-        }
-        if (nextPlayer == 'o') {
-            usedO[idx] = true
-        }
-        if (isMax) {
-            for (let i = 0; i < tableHeight; i++) {
-                for (let j = 0; j < tableWidth; j++) {
-                    // console.log('max ', i, j, table[i][j])
-                    if (table[i][j] == '' || (table[i][j].split('_')[0] != nextPlayer && sizes[+table[i][j].split('_')[1]] < sizes[idx])) {
-                        table[i][j] = `${nextPlayer}_${idx}`
-                        let score = minimax(depth + 1, myMark, !isMax, gameSettings, table, [...usedO], [...usedX], nextPlayer == 'x' ? 'o' : 'x')
-                        bestVal = Math.max(score, bestVal)
-                    }
-                }
-            }
-        }
-        else {
-
-            for (let i = 0; i < tableHeight; i++) {
-                for (let j = 0; j < tableWidth; j++) {
-                    // console.log('min ', i, j, table[i][j])
-                    if (table[i][j] == '' || (table[i][j].split('_')[0] != nextPlayer && sizes[+table[i][j].split('_')[1]] < sizes[idx])) {
-                        table[i][j] = `${nextPlayer}_${idx}`
-                        let score = minimax(depth + 1, myMark, !isMax, gameSettings, table, [...usedO], [...usedX], nextPlayer == 'x' ? 'o' : 'x')
-                        bestVal = Math.min(score, bestVal)
-                    }
-                }
-            }
-        }
-        if (nextPlayer == 'x') {
-            usedX[idx] = false
-        }
-        if (nextPlayer == 'o') {
-            usedO[idx] = false
-        }
+export const gameSettings = { tableWidth: 3, tableHeight: 3, goal: 3, sizes: [1, 2, 3, 4, 5] }
 
 
-
-    }
-
-    return bestVal;
-}
-
-const bestMove = (myMark: string, gameSettings: { tableHeight: number, tableWidth: number, goal: number, sizes: number[] }, table: string[][], usedO: boolean[], usedX: boolean[], player: string) => {
-    let bestVal = -Infinity;
-    let moves: { r: number, c: number, idx: number }[] = []
-    const sizes = gameSettings.sizes
-    for (let idx = 0; idx < sizes.length; idx++) {
-        if (usedO[idx]) {
-            continue
-        }
-        usedO[idx] = true
-        for (let i = 0; i < gameSettings.tableHeight; i++) {
-            for (let j = 0; j < gameSettings.tableWidth; j++) {
-                // console.log(': ', i, j, ' ??', table[i][j])
-
-                if (table[i][j] == '' || (table[i][j].split('_')[0] != 'o' && sizes[+table[i][j].split('_')[1]] < sizes[idx])) {
-
-
-
-                    let newTable = Array.from(Array(gameSettings.tableHeight), () => new Array(gameSettings.tableWidth))
-
-                    for (let i = 0; i < gameSettings.tableHeight; i++) {
-                        for (let j = 0; j < gameSettings.tableWidth; j++) {
-                            newTable[i][j] = table[i][j]
-                        }
-                    }
-                    newTable[i][j] = `${player}_${idx}`
-
-                    let score = minimax(0, myMark, false, gameSettings, newTable, [...usedO], [...usedX], 'x')
-
-
-
-                    if (score > bestVal) {
-                        moves = [
-                            {
-                                'r': i,
-                                'c': j,
-                                'idx': idx,
-                            }
-                        ]
-                        bestVal = score
-                    }
-                    else if (score == bestVal) {
-                        moves.push(
-                            {
-                                'r': i,
-                                'c': j,
-                                'idx': idx,
-                            }
-                        )
-                    }
-                }
-            }
-        }
-        usedO[idx] = false
-    }
-    // console.log('moves', moves)
-    return moves[Math.floor(Math.random() * moves.length)]
-}
-
-const evaluateBoard = (gameSettings: { tableHeight: number, tableWidth: number, goal: number, sizes: number[] }, table: string[][], usedO: boolean[], usedX: boolean[], nextPlayer: string) => {
-    // console.log('evaluating...')
-    // console.log(table)
-    // console.log(usedO)
-    // console.log(usedX)
-    // console.log(nextPlayer)
-    const tableHeight = gameSettings.tableHeight;
-    const tableWidth = gameSettings.tableWidth;
-    const goal = gameSettings.tableHeight;
-    const sizes = gameSettings.sizes
-    let ret = {
-        status: '',
-        completedLine: -1
-    }
-    for (let i = 0; i < tableHeight; i++) {
-        for (let j = 0; j < tableWidth; j++) {
-            if (i + goal - 1 < tableHeight) {
-                let couX = 0;
-                let couO = 0;
-                for (let k = 0; k < goal; k++) {
-                    if (table[i + k][j].split('_')[0] == 'x') {
-                        couX++;
-                    }
-                    if (table[i + k][j].split('_')[0] == 'o') {
-                        couO++;
-                    }
-                }
-                if (couX >= goal) {
-                    ret.status = 'x'
-                }
-                if (couO >= goal) {
-                    ret.status = 'o'
-                }
-                if (couO >= goal || couX >= goal) {
-                    ret.completedLine = j;
-                }
-            }
-            if (j + goal - 1 < tableWidth) {
-                let couX = 0;
-                let couO = 0;
-                for (let k = 0; k < goal; k++) {
-                    if (table[i][j + k].split('_')[0] == 'x') {
-                        couX++;
-                    }
-                    if (table[i][j + k].split('_')[0] == 'o') {
-                        couO++;
-                    }
-                }
-                if (couX >= goal) {
-                    ret.status = 'x'
-                }
-                if (couO >= goal) {
-                    ret.status = 'o'
-                }
-                if (couO >= goal || couX >= goal) {
-                    ret.completedLine = i + 3;
-                }
-            }
-
-
-        }
-    }
-
-    for (let i = 0; i < tableHeight; i++) {
-        for (let j = 0; j < tableWidth; j++) {
-            if (i + goal - 1 < tableHeight && j + goal - 1 < tableWidth) {
-                let couX = 0;
-                let couO = 0;
-                for (let k = 0; k < goal; k++) {
-                    if (table[i + k][j + k].split('_')[0] == 'x') {
-                        couX++;
-                    }
-                    if (table[i + k][j + k].split('_')[0] == 'o') {
-                        couO++;
-                    }
-                }
-                if (couX >= goal) {
-                    ret.status = 'x'
-                }
-                if (couO >= goal) {
-                    ret.status = 'o'
-                }
-                if (couO >= goal || couX >= goal) {
-                    ret.completedLine = 6;
-                }
-            }
-
-            if (i + goal - 1 < tableHeight && j - (goal - 1) >= 0) {
-                let couX = 0;
-                let couO = 0;
-                for (let k = 0; k < goal; k++) {
-
-                    if (table[i + k][j - k].split('_')[0] == 'x') {
-                        couX++;
-                    }
-                    if (table[i + k][j - k].split('_')[0] == 'o') {
-                        couO++;
-                    }
-                }
-                if (couX >= goal) {
-                    ret.status = 'x'
-                }
-                if (couO >= goal) {
-                    ret.status = 'o'
-                }
-                if (couO >= goal || couX >= goal) {
-                    ret.completedLine = 7;
-                }
-            }
-
-        }
-    }
-
-    if (ret.status != '') return ret
-
-    let maxSize = -1;
-    let have = false
-    // Check if the next player can place on any space or not
-    sizes.forEach((size, _idx) => {
-        if (!usedO[_idx] || !usedX[_idx]) {
-            have = true
-        }
-        if (nextPlayer == 'o' && !usedO[_idx]) {
-            maxSize = Math.max(maxSize, size)
-        }
-        if (nextPlayer == 'x' && !usedX[_idx]) {
-            maxSize = Math.max(maxSize, size)
-        }
-    })
-
-    let can = false;
-    table.forEach((row) => {
-        row.forEach((col) => {
-            if (col == '') {
-                can = true
-            }
-            else if (sizes[+col.split('_')[1]] < maxSize && col.split('_')[0] != nextPlayer) {
-                can = true;
-            }
-        })
-    })
-
-    if (!can || !have) {
-        ret.status = 'draw'
-    }
-
-    return ret
-}
 
 const Game = ({ xPlayer = 'human', oPlayer = 'human' }: Props) => {
     const isMounted = useRef(false);
 
-    const initialBoardStatus = {
+    const initialBoardStatus: boardStatusType = {
         table: [["", "", ""], ["", "", ""], ["", "", ""]],
         usedX: [false, false, false, false, false],
         usedO: [false, false, false, false, false]
     }
+
     const fadeIn = useSpring({ to: { opacity: 1 }, from: { opacity: 0 }, delay: 0 })
 
 
 
     const [completedLines, setCompletedLines] = useState([false, false, false, false, false, false, false, false])
 
-    const [boardStatus, setBoardStatus] = useState(initialBoardStatus)
+    const [boardStatus, setBoardStatus] = useState<boardStatusType>(initialBoardStatus)
     const [player, setPlayer] = useState("x")
     const [winner, setWinner] = useState("")
 
     const [sizeIdx, setSizeIdx] = useState(-1)
 
-    const gameSettings = { tableWidth: 3, tableHeight: 3, goal: 3, sizes: [1, 2, 3, 4, 5] }
+
     const sizes = gameSettings.sizes
 
     const showMarkDown = (delay: number) => useSpring({ to: { opacity: 1, y: 0 }, from: { opacity: 0, y: -100 }, delay: delay, })
@@ -357,7 +74,11 @@ const Game = ({ xPlayer = 'human', oPlayer = 'human' }: Props) => {
             isMounted.current = true
             return
         }
+
+
+
         const ret = evaluateBoard(gameSettings, boardStatus.table, boardStatus.usedO, boardStatus.usedX, player == 'x' ? 'o' : 'x')
+
         if (ret.status == 'x') {
             setWinner('x')
             setCompletedLines((prev) => {
@@ -385,59 +106,35 @@ const Game = ({ xPlayer = 'human', oPlayer = 'human' }: Props) => {
 
     useEffect(() => {
         if (player == 'o' && oPlayer == 'random' && winner == '') {
+            fetch(`/api/random?board=${JSON.stringify(boardStatus)}&player=${player}`).then((res) => {
+                res.json().then((choice) => {
+                    console.log('Random API')
+                    console.log(choice)
+                    setSizeIdx(choice.idx)
+                    setTimeout(() => {
+                        placeTable(choice.i, choice.j, choice.idx)
+                    }, 500)
+                })
 
-            let availableChoice: { i: number; j: number, idx: number }[] = []
-            boardStatus.usedO.forEach((value, _idx) => {
-                if (value == false) {
-                    boardStatus.table.forEach((row, _r) => {
-                        row.forEach((col, _c) => {
-                            if (player != col.split('_')[0] && sizes[+col.split('_')[1]] < sizes[_idx]) {
-                                availableChoice.push({ i: _r, j: _c, idx: _idx })
-                            }
-                            else if (col == '') {
-                                availableChoice.push({ i: _r, j: _c, idx: _idx })
-                            }
-                        })
-                    })
-                }
             })
-
-
-            const choice = availableChoice[Math.floor(Math.random() * availableChoice.length)]
-
-            setSizeIdx(choice.idx)
-
-            setTimeout(() => {
-                placeTable(choice.i, choice.j, choice.idx)
-            }, 500)
 
         }
         else if (player == 'o' && oPlayer == 'minimax' && winner == '') {
-            let table = Array.from(Array(gameSettings.tableHeight), () => new Array(gameSettings.tableWidth))
 
-            for (let i = 0; i < gameSettings.tableHeight; i++) {
-                for (let j = 0; j < gameSettings.tableWidth; j++) {
-                    table[i][j] = boardStatus.table[i][j]
-                }
-            }
+            fetch(`/api/minimax?board=${JSON.stringify(boardStatus)}&player=${player}`).then((res) => {
+                res.json().then((choice) => {
+                    console.log('Minimax API')
+                    console.log(choice)
+                    setSizeIdx(choice.idx)
+                    setTimeout(() => {
+                        placeTable(choice.i, choice.j, choice.idx)
+                    }, 500)
+                })
 
-            let usedO = [...boardStatus.usedO]
-            let usedX = [...boardStatus.usedX]
-
-            const ret = bestMove('o', gameSettings, table, usedO, usedX, 'o')
-            // console.log('best move', ret)
-            let botSelectedIdx = ret.idx;
-            setSizeIdx(botSelectedIdx)
-            // console.log(botSelectedIdx)
-            let botSelectedPos = {
-                i: ret.r, j: ret.c
-            };
-            // console.log(botSelectedIdx, botSelectedPos)
-            setTimeout(() => {
-                placeTable(botSelectedPos.i, botSelectedPos.j, botSelectedIdx)
-            }, 500)
+            })
 
         }
+
     }, [player])
 
 

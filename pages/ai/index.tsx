@@ -33,7 +33,7 @@ const Home: NextPage = () => {
       href: '/ai/medium',
       label: 'Medium',
       y: 0, delay: 300
-    },])
+    }])
   }, [])
 
   const goTo = (url: string) => {
