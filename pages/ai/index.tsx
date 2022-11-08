@@ -33,7 +33,17 @@ const Home: NextPage = () => {
       href: '/ai/medium',
       label: 'Medium',
       y: 0, delay: 300
-    }])
+    }, {
+      href: '/ai/easy-vs-easy',
+      label: 'AI vs AI',
+      y: 0, delay: 450
+    }
+      // , {
+      //   href: '/ai/medium-vs-medium',
+      //   label: 'AI vs AI 2',
+      //   y: 0, delay: 600
+      // }
+    ])
   }, [])
 
   const goTo = (url: string) => {

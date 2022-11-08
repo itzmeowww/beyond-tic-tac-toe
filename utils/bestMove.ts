@@ -1,6 +1,6 @@
 import { choiceType } from '../types/choiceType'
 import { evaluateBoard } from './evaluate'
-
+//!!! only work for o player
 const minimax = (
   depth: number,
   myMark: string,

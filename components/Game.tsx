@@ -109,30 +109,32 @@ const Game = ({ xPlayer = 'human', oPlayer = 'human', flipScore = false }: Props
 
 
     useEffect(() => {
-        if (player == 'o' && oPlayer == 'random' && winner == '') {
+        if (((player == 'o' && oPlayer == 'random') || (player == 'x' && xPlayer == 'random')) && winner == '') {
             fetch(`/api/random?board=${JSON.stringify(boardStatus)}&player=${player}`).then((res) => {
                 res.json().then((choice) => {
                     console.log('Random API')
                     console.log(choice)
                     setSizeIdx(choice.idx)
+                    const buffer = Math.round(Math.random() * 10) * 20;
                     setTimeout(() => {
                         placeTable(choice.i, choice.j, choice.idx)
-                    }, 500)
+                    }, 500 + buffer)
                 })
 
             })
 
         }
-        else if (player == 'o' && oPlayer == 'minimax' && winner == '') {
+        else if (((player == 'o' && oPlayer == 'minimax') || (player == 'x' && xPlayer == 'minimax')) && winner == '') {
 
             fetch(`/api/minimax?board=${JSON.stringify(boardStatus)}&player=${player}`).then((res) => {
                 res.json().then((choice) => {
                     console.log('Minimax API')
                     console.log(choice)
                     setSizeIdx(choice.idx)
+                    const buffer = Math.round(Math.random() * 10) * 20;
                     setTimeout(() => {
                         placeTable(choice.i, choice.j, choice.idx)
-                    }, 500)
+                    }, 500 + buffer)
                 })
 
             })
@@ -180,7 +182,7 @@ const Game = ({ xPlayer = 'human', oPlayer = 'human', flipScore = false }: Props
                     <div className={`w-full border-white h-24 border-4 border-b-0 flex items-center justify-between px-4 ${player == 'o' ? 'bg-teal-600' : 'bg-transparent'}`}>
 
                         {sizes.map((size, _idx) =>
-                            <animated.div style={showMarkDown(100 * (1 + _idx))} key={`o-${_idx}`} onClick={() => { if (player == 'o') setSizeIdx(_idx) }} className={`hover:cursor-pointer flex flex-col items-center justify-end ${boardStatus.usedO[_idx] && 'invisible'}`} >
+                            <animated.div style={showMarkDown(100 * (1 + _idx))} key={`o-${_idx}`} onClick={() => { if (player == 'o' && oPlayer == 'human') setSizeIdx(_idx) }} className={`hover:cursor-pointer flex flex-col items-center justify-end ${boardStatus.usedO[_idx] && 'invisible'}`} >
                                 <Icon name="o" select={sizeIdx == _idx && player == 'o'} size={size} />
                             </animated.div>
                         )}
@@ -214,7 +216,7 @@ const Game = ({ xPlayer = 'human', oPlayer = 'human', flipScore = false }: Props
                     </div>
                     <div className={`w-full h-24 border-white border-4 border-t-0 flex justify-between items-center px-4 ${player == 'x' ? 'bg-teal-600' : 'bg-transparent'}`}>
                         {sizes.map((size, _idx) =>
-                            <animated.div style={showMarkUp(600 - 100 * (1 + _idx))} key={`x-${_idx}`} className={`hover:cursor-pointer flex flex-col items-center justify-end ${boardStatus.usedX[_idx] && 'invisible'}`} onClick={() => { if (player == 'x') setSizeIdx(_idx) }}>
+                            <animated.div style={showMarkUp(600 - 100 * (1 + _idx))} key={`x-${_idx}`} className={`hover:cursor-pointer flex flex-col items-center justify-end ${boardStatus.usedX[_idx] && 'invisible'}`} onClick={() => { if (player == 'x' && xPlayer == 'human') setSizeIdx(_idx) }}>
                                 <Icon name="x" select={sizeIdx == _idx && player == 'x'} size={size} />
                             </animated.div>
                         )}
