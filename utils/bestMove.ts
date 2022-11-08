@@ -129,6 +129,22 @@ export const bestMove = (
           }
           newTable[i][j] = `${player}_${idx}`
 
+          const res = evaluateBoard(
+            gameSettings,
+            newTable,
+            usedO,
+            usedX,
+            myMark
+          )
+
+          if (res.status == myMark) {
+            return {
+              i: i,
+              j: j,
+              idx: idx,
+            }
+          }
+
           let score = minimax(
             0,
             myMark,
