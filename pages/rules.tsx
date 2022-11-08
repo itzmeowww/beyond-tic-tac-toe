@@ -39,7 +39,7 @@ const Rules = () => {
             <animated.main className="max-w-lg flex flex-col items-center justify-start gap-6 w-full px-4">
                 <animated.div style={fade(200)} className="flex flex-col items-center w-full" >
                     <div className="flex w-full">
-                        <h1 className="bg-black text-white pl-3 w-10 rounded-l-xl flex items-center justify-start">1</h1>
+                        <h1 className="bg-neutral-800 text-white pl-3 w-10 rounded-l-xl flex items-center justify-start">1</h1>
                         <div className="bg-white w-full px-4 py-2 rounded-r-xl -ml-3 shadow flex gap-2 items-center">
                             <h1 className="">There are 5 different sizes of <b>X</b> and
                                 <b> O</b> marks</h1>
@@ -60,7 +60,7 @@ const Rules = () => {
 
                 <animated.div style={fade(300)} className="flex flex-col items-center gap-4 w-full" >
                     <div className="flex w-full">
-                        <h1 className="bg-black text-white pl-3 w-10 rounded-l-xl flex items-center justify-start">2</h1>
+                        <h1 className="bg-neutral-800 text-white pl-3 w-10 rounded-l-xl flex items-center justify-start">2</h1>
                         <div className="bg-white w-full px-4 py-2 rounded-r-xl -ml-3 shadow flex gap-2 items-center">
                             <h1> Like a normal tic-tac-toe, you can place your mark on an empty space</h1>
                         </div>
@@ -74,7 +74,7 @@ const Rules = () => {
 
                 <animated.div style={fade(400)} className="flex flex-col items-center gap-4 w-full" >
                     <div className="flex w-full">
-                        <h1 className="bg-black text-white pl-3 w-10 rounded-l-xl flex items-center justify-start">3</h1>
+                        <h1 className="bg-neutral-800 text-white pl-3 w-10 rounded-l-xl flex items-center justify-start">3</h1>
                         <div className="bg-white w-full px-4 py-2 rounded-r-xl -ml-3 shadow flex gap-2 items-center">
                             <h1> You can place your mark on your opponent's mark if their mark is <b>smaller</b>. </h1>
                         </div>
@@ -90,7 +90,7 @@ const Rules = () => {
                 </animated.div>
                 <animated.div style={fade(500)} className="flex flex-col items-center gap-4 w-full">
                     <div className="flex w-full" >
-                        <h1 className="bg-black text-white pl-3 w-10 rounded-l-xl flex items-center justify-start">4</h1>
+                        <h1 className="bg-neutral-800 text-white pl-3 w-10 rounded-l-xl flex items-center justify-start">4</h1>
                         <div className="bg-white w-full px-4 py-2 rounded-r-xl -ml-3 shadow flex gap-2 items-center">
                             If you matched 3 marks in row, column, or diagonal, you win!
                         </div>
