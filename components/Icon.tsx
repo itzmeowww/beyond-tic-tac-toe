@@ -1,4 +1,3 @@
-import { is } from '@react-spring/shared'
 import { useSpring, animated } from 'react-spring'
 type Props = {
     name: string

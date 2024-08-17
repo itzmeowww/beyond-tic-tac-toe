@@ -11,6 +11,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<choice
 
     const { board, player } = req.query
 
+    if (board == undefined) {
+        return res.status(400)
+    }
+
     const boardStatus = JSON.parse(Array.isArray(board) ? board[0] : board)
     let table = Array.from(Array(gameSettings.tableHeight), () => new Array(gameSettings.tableWidth))
 
